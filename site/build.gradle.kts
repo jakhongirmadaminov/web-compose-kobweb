@@ -35,6 +35,8 @@ kotlin {
                 implementation(libs.kobweb.silk.core)
                 implementation(libs.kobweb.silk.icons.fa)
                 implementation(libs.kobwebx.markdown)
+                implementation("io.ktor:ktor-client-core:2.2.2")
+                implementation("io.ktor:ktor-client-js:2.2.2")
              }
         }
 

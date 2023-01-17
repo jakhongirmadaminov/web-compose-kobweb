@@ -2,6 +2,13 @@ package org.example.smartposweb.pages
 
 import androidx.compose.runtime.*
 import com.varabyte.kobweb.core.Page
+import io.ktor.client.*
+import io.ktor.client.call.*
+import io.ktor.client.engine.js.*
+import io.ktor.client.plugins.*
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
+import io.ktor.http.*
 //import io.ktor.client.*
 //import io.ktor.client.call.*
 //import io.ktor.client.engine.js.*
@@ -17,7 +24,15 @@ import org.jetbrains.compose.web.css.DisplayStyle.Companion.Flex
 import org.jetbrains.compose.web.css.DisplayStyle.Companion.InlineBlock
 import org.jetbrains.compose.web.dom.*
 
-//val httpClient by lazy { HttpClient(Js) }
+val httpClient by lazy {
+    HttpClient(Js) {
+        defaultRequest {
+            url("https://api-dev.a-pay.uz")
+            contentType(ContentType.Application.Json)
+        }
+    }
+}
+
 @Page
 @Composable
 fun SmartSosAdminLogin() {
@@ -166,11 +181,11 @@ fun loginButton() {
             onClick {
                 console.log("CLICKED!!")
                 rememberCoroutineScope.launch {
-//                    httpClient.postJson(urlAddress = "https://cabinet-dev.smartpos.uz/api/login/mobile") {
-//                        setBody("{username: 998453463634,password: 3sdgsgsgs,remember: false}")
-//                    }
+                    httpClient.post("/api/admin/v1/account/login") {
+                        header("App-Type", "APAY_ADMIN")
+                        setBody("{\"login\": \"apayadmin\", \"password\": \"@dmin4@pay\"}")
+                    }
                 }
-
             }
             style {
                 display(Flex)
@@ -199,22 +214,22 @@ fun loginButton() {
         }
     }
 }
-//
-//suspend inline fun <reified T> HttpClient.postJson(
-//    urlAddress: String,
-//    block: HttpRequestBuilder.() -> Unit = {}
-//): T {
-//    val response = post {
-//        contentType(ContentType.Application.Json)
-//        url.takeFrom(urlAddress)
-//        block()
-//    }
-//    if (response.status == HttpStatusCode.OK) {
-//        return response.body()
-//    } else {
-//        throw ServerResponseException(response, response.bodyAsText())
-//    }
-//}
+
+suspend inline fun <reified T> HttpClient.postJson(
+    urlAddress: String,
+    block: HttpRequestBuilder.() -> Unit = {}
+): T {
+    val response = post {
+        contentType(ContentType.Application.Json)
+        url.takeFrom(urlAddress)
+        block()
+    }
+    if (response.status == HttpStatusCode.OK) {
+        return response.body()
+    } else {
+        throw ServerResponseException(response, response.bodyAsText())
+    }
+}
 
 @Composable
 fun rememberMe() {
