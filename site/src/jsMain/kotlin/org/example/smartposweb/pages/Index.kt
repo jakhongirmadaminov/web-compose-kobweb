@@ -8,18 +8,15 @@ import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Spacer
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
-import com.varabyte.kobweb.compose.ui.modifiers.gridTemplateRows
-import com.varabyte.kobweb.compose.ui.modifiers.minHeight
-import com.varabyte.kobweb.compose.ui.modifiers.textAlign
+import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.silk.components.graphics.Image
 import org.example.smartposweb.Spacer
 import org.jetbrains.compose.web.attributes.InputType
-import org.jetbrains.compose.web.css.percent
-import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.Button
 import org.jetbrains.compose.web.dom.Input
+import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
 
 @Page
@@ -43,21 +40,64 @@ fun HomePage() {
         ) {
             Image("logo.png")
             Spacer(10.px)
-            Input(
-                InputType.Text,
-                attrs = {
-                    onInput { e -> username = e.value }
+            Span(attrs = {
+                style {
+                    border(width = 0.5.px, LineStyle.Solid, Color("#D0D5DD"))
+                    boxSizing("border-box")
+                    paddingLeft(11.px)
+                    paddingRight(11.px)
+                    paddingTop(4.px)
+                    paddingBottom(4.px)
+                    borderRadius(2.px)
+                    display(DisplayStyle.LegacyInlineFlex)
                 }
-            )
+            }) {
+                Image(
+                    "user.png",
+                    modifier = Modifier.size(16.px)
+                )
+                Input(
+                    InputType.Text,
+                    attrs = {
+                        onInput { e -> username = e.value }
+                        style {
+                            border(width = 0.px)
+                            outline("none")
+                        }
+                    }
+                )
+            }
             Spacer(10.px)
-            Input(
-                InputType.Text,
-                attrs = {
-                    onInput { e -> password = e.value }
+
+            Span(attrs = {
+                style {
+                    border(width = 0.5.px, LineStyle.Solid, Color("#D0D5DD"))
+                    boxSizing("border-box")
+                    paddingLeft(11.px)
+                    paddingRight(11.px)
+                    paddingTop(4.px)
+                    paddingBottom(4.px)
+                    borderRadius(2.px)
+                    display(DisplayStyle.LegacyInlineFlex)
                 }
-            )
+            }) {
+                Image(
+                    "padlock.png",
+                    modifier = Modifier.size(16.px)
+                )
+                Input(
+                    InputType.Text,
+                    attrs = {
+                        onInput { e -> username = e.value }
+                        style {
+                            border(width = 0.px)
+                            outline("none")
+                        }
+                    }
+                )
+            }
             Spacer(10.px)
-            Button {
+            Button() {
                 Text("Sign In")
             }
         }
