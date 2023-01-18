@@ -17,6 +17,8 @@ import org.jetbrains.compose.web.css.*
 
 private const val COLOR_MODE_KEY = "smartposweb:colorMode"
 
+var userToken: String? = null
+
 @InitSilk
 fun updateTheme(ctx: InitSilkContext) = ctx.config.apply {
     initialColorMode = localStorage.getItem(COLOR_MODE_KEY)?.let { ColorMode.valueOf(it) } ?: ColorMode.LIGHT
@@ -26,7 +28,7 @@ fun updateTheme(ctx: InitSilkContext) = ctx.config.apply {
 fun registerGlobalStyles(ctx: InitSilkContext) = ctx.config.apply {
     registerBaseStyle("body") {
         Modifier.fontFamily(
-	    "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+            "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
             "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "sans-serif"
         )
     }

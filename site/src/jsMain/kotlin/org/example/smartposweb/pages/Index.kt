@@ -9,11 +9,16 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.core.Page
+import com.varabyte.kobweb.core.rememberPageContext
+import com.varabyte.kobweb.silk.components.forms.Button
 import com.varabyte.kobweb.silk.components.graphics.Image
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
+import io.ktor.http.*
+import kotlinx.coroutines.launch
 import org.example.smartposweb.InputField
 import org.example.smartposweb.Spacer
 import org.jetbrains.compose.web.css.*
-import org.jetbrains.compose.web.dom.Button
 import org.jetbrains.compose.web.dom.Text
 
 @Page
@@ -21,6 +26,11 @@ import org.jetbrains.compose.web.dom.Text
 fun HomePage() {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var errorString by remember { mutableStateOf<String?>(null) }
+    val ctx = rememberPageContext()
+
+    val rememberCoroutineScope = rememberCoroutineScope()
+
     Box(
         Modifier.fillMaxSize().minHeight(100.percent)
             // Create a box with two rows: the main content (fills as much space as it can) and the footer (which reserves
@@ -40,8 +50,24 @@ fun HomePage() {
             Spacer(10.px)
             InputField(icon = "padlock.png", placeholder = "Password") { password = it }
             Spacer(10.px)
-            Button() {
+            Button(onClick = {
+                console.log("CLICKED!!")
+                rememberCoroutineScope.launch {
+                    val loginResult = httpClient.post("/api/admin/v1/account/login") {
+                        header("App-Type", "APAY_ADMIN")
+                        setBody("{\"login\": \"$username\", \"password\": \"$password\"}")
+                    }
+                    if (loginResult.status == HttpStatusCode.OK) {
+                        ctx.router.navigateTo("/home")
+                    } else {
+                        errorString = loginResult.bodyAsText()
+                    }
+                }
+            }) {
                 Text("Sign In")
+            }
+            errorString?.let {
+                Text(it)
             }
         }
     }
