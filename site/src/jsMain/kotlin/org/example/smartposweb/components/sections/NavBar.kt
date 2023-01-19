@@ -79,11 +79,14 @@ fun NavBar() {
             Box(
                 modifier = Modifier.backgroundColor(Color.red).height(50.px)
                     .width(if (navBarStyle == NavBarStyleExpanded) 150.px else 50.px)
+                    .display(DisplayStyle.Flex)
+                    .justifyContent(JustifyContent.Center)
+                    .alignItems(AlignItems.Center)
                     .onClick {
-                        if (navBarStyle == NavBarStyleExpanded) {
-                            navBarStyle = NavBarStyleShrunk
+                        navBarStyle = if (navBarStyle == NavBarStyleExpanded) {
+                            NavBarStyleShrunk
                         } else {
-                            navBarStyle = NavBarStyleExpanded
+                            NavBarStyleExpanded
                         }
                     }) {
                 Image(
@@ -91,7 +94,7 @@ fun NavBar() {
                     modifier = Modifier.fillMaxWidth().backgroundColor(Color.white)
                         .size(40.px).transform {
                             scaleX(if (navBarStyle == NavBarStyleExpanded) -1 else 1)
-                        }.align(Alignment.CenterHorizontally)
+                        }
                 )
             }
 
