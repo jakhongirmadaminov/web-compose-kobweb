@@ -30,7 +30,6 @@ fun HomePage() {
     val ctx = rememberPageContext()
 
     val rememberCoroutineScope = rememberCoroutineScope()
-
     Box(
         Modifier.fillMaxSize().minHeight(100.percent)
             // Create a box with two rows: the main content (fills as much space as it can) and the footer (which reserves
