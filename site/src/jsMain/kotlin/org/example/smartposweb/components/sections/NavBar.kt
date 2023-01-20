@@ -1,16 +1,18 @@
 package org.example.smartposweb.components.sections
 
+import AppStylesheet.plus
 import androidx.compose.runtime.*
-import com.varabyte.kobweb.compose.css.AlignSelf
-import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
+import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.foundation.layout.Spacer
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
+import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.silk.components.forms.Button
 import com.varabyte.kobweb.silk.components.graphics.Image
+import com.varabyte.kobweb.silk.components.icons.fa.FaArrowLeft
 import com.varabyte.kobweb.silk.components.icons.fa.FaMoon
 import com.varabyte.kobweb.silk.components.icons.fa.FaSun
 import com.varabyte.kobweb.silk.components.navigation.Link
@@ -23,6 +25,8 @@ import com.varabyte.kobweb.silk.theme.shapes.clip
 import com.varabyte.kobweb.silk.theme.toSilkPalette
 import org.jetbrains.compose.web.ExperimentalComposeWebApi
 import org.jetbrains.compose.web.css.*
+import org.jetbrains.compose.web.css.selectors.CSSSelector.PseudoClass.hover
+import org.jetbrains.compose.web.dom.Text
 
 val NavBarStyleShrunk = ComponentStyle.base("nav-bar-shrunk") {
     Modifier
@@ -64,12 +68,20 @@ fun NavBar() {
     var colorMode by rememberColorMode()
     var navBarStyle by remember { mutableStateOf(NavBarStyleShrunk) }
 
-    Box(navBarStyle.toModifier()) {
+    Box(navBarStyle.toModifier().boxShadow(5.px)) {
         Column(
             Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             NavLink("/home", "HOME")
+            val navItems = listOf<NavigationEntry>(
+                NavigationEntry.NavSection(
+                    "/service-providers",
+                    listOf(NavigationEntry.NavSingle("/companies", "Companies")),
+                    "Service Providers"
+                )
+            )
+            setupNavItems(navItems)
 //            NavLink("/", "HOME")
 //            NavLink("/about", "ABOUT")
 //            NavLink("/markdown", "MARKDOWN")
@@ -77,7 +89,7 @@ fun NavBar() {
             Spacer()
 
             Box(
-                modifier = Modifier.backgroundColor(Color.red).height(50.px)
+                modifier = Modifier.height(50.px)
                     .width(if (navBarStyle == NavBarStyleExpanded) 150.px else 50.px)
                     .display(DisplayStyle.Flex)
                     .justifyContent(JustifyContent.Center)
@@ -89,10 +101,11 @@ fun NavBar() {
                             NavBarStyleExpanded
                         }
                     }) {
+
                 Image(
                     "right-arrow.png",
-                    modifier = Modifier.fillMaxWidth().backgroundColor(Color.white)
-                        .size(40.px).transform {
+                    modifier = Modifier.fillMaxWidth()
+                        .size(20.px).transform {
                             scaleX(if (navBarStyle == NavBarStyleExpanded) -1 else 1)
                         }
                 )
@@ -110,5 +123,55 @@ fun NavBar() {
                 }
             }
         }
+    }
+}
+
+@Composable
+fun setupNavItems(navItems: List<NavigationEntry>) {
+    Column {
+        navItems.forEach {
+            when (it) {
+                is NavigationEntry.NavSingle -> {
+                    NavView(it)
+                }
+                is NavigationEntry.NavSection -> {
+                    ExpandableNavView(it)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ExpandableNavView(navs: NavigationEntry.NavSection) {
+    var expanded by remember { mutableStateOf(false) }
+    Row(
+        modifier = Modifier
+            .onClick { expanded = !expanded }
+            .fillMaxWidth()
+            .padding(left = 15.px)
+            .height(50.px)
+            .backgroundColor(Color.red)
+    ) {
+        Text(navs.title)
+    }
+    if (expanded) {
+        Column(Modifier.fillMaxWidth().padding(left = 15.px)) {
+            navs.items.forEach {
+                NavView(it)
+            }
+        }
+    }
+}
+
+@Composable
+fun NavView(nav: NavigationEntry.NavSingle) {
+    var bgColor by remember { mutableStateOf(Color.red) }
+    Row(modifier = Modifier.fillMaxWidth().height(50.px).backgroundColor(bgColor).onMouseEnter {
+        bgColor = Color.blue
+    }.onMouseLeave {
+        bgColor = Color.red
+    }) {
+        Text(nav.title)
     }
 }

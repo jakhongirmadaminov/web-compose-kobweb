@@ -49,6 +49,7 @@ fun InputField(
             paddingBottom(4.px)
             borderRadius(2.px)
             display(DisplayStyle.LegacyInlineFlex)
+
         }
         attrs?.invoke(this)
     }) {
@@ -67,7 +68,9 @@ fun InputField(
                 style {
                     border(width = 0.px)
                     outline("none")
+
                 }
+
             }
         )
     }
